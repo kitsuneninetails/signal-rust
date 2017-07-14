@@ -5,3 +5,6 @@ authors = ["Michael Micucci <michael.micucci@exchange.co.jp>"]
 
 [dependencies]
 libc = "*"
+
+[dev-dependencies]
+lazy_static = "*"
