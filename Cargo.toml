@@ -1,5 +1,5 @@
 [package]
-name = "signal"
+name = "signal-simple"
 version = "0.1.0"
 authors = ["Michael Micucci <micucci@fox-den.org>"]
 description = "Library to handle and send system signals"
