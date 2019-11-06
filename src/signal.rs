@@ -11,6 +11,7 @@ pub fn signal(signum: int, sig_handler: fn(int), flags: Option<int>) {
     signal_internal(signum, int_sig_handler, flags)
 }
 
+#[cfg(target_os = "linux")]
 fn signal_internal(signum: int, sig_handler: libc::size_t, flags: Option<int>) {
     let mut sigset: libc::sigset_t = unsafe { uninitialized() };
     let _ = unsafe { libc::sigemptyset(&mut sigset as *mut libc::sigset_t) };
@@ -23,6 +24,21 @@ fn signal_internal(signum: int, sig_handler: libc::size_t, flags: Option<int>) {
     siga.sa_flags = flags.map(|x| { x - libc::SA_SIGINFO }).unwrap_or(libc::SA_ONSTACK | libc::SA_RESTART);
     siga.sa_restorer = None;
     
+    unsafe { libc::sigaction(signum, &siga as *const libc::sigaction, &mut oldact as *mut libc::sigaction) };
+}
+
+#[cfg(target_os = "macos")]
+fn signal_internal(signum: int, sig_handler: libc::size_t, flags: Option<int>) {
+    let mut sigset: libc::sigset_t = unsafe { uninitialized() };
+    let _ = unsafe { libc::sigemptyset(&mut sigset as *mut libc::sigset_t) };
+
+    let mut siga = unsafe { uninitialized::<libc::sigaction>() };
+    let mut oldact = unsafe { uninitialized::<libc::sigaction>() };
+
+    siga.sa_sigaction = sig_handler;
+    siga.sa_mask = sigset;
+    siga.sa_flags = flags.map(|x| { x - libc::SA_SIGINFO }).unwrap_or(libc::SA_ONSTACK | libc::SA_RESTART);
+
     unsafe { libc::sigaction(signum, &siga as *const libc::sigaction, &mut oldact as *mut libc::sigaction) };
 }
 
