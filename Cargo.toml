@@ -1,6 +1,6 @@
 [package]
 name = "signal-simple"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Michael Micucci <micucci@fox-den.org>"]
 description = "Library to handle and send system signals"
 repository = "http://github.com/kitsuneninetails/signal-rust"
