@@ -55,8 +55,8 @@ impl<T> Clone for SyncChannel<T> {
         }
     }
 }
-unsafe impl<T> Send for SyncChannel<T> {}
-unsafe impl<T> Sync for SyncChannel<T> {}
+unsafe impl<T: Send> Send for SyncChannel<T> {}
+unsafe impl<T: Send> Sync for SyncChannel<T> {}
 
 #[cfg(test)]
 mod tests {
